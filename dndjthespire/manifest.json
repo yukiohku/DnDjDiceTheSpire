@@ -5,7 +5,7 @@
          "128": "icon_128.png"
       },
       "js": [ "main.js" ],
-      "matches": [ "https://dndjp.sakura.ne.jp/dddbpf/OUTPUT.php*" ],
+      "matches": [ "http://dndjp.sakura.ne.jp/dddbpf/OUTPUT.php*" ],
       "run_at": "document_end"
    } ],
    "description": "dddbpf to TaleSpire Dice roller",
