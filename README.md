@@ -2,7 +2,7 @@
 日本のD&amp;Dプレイで使用される各種サイトとTalespireを連携させるChrome拡張郡
 
 ### dddbpfthespire
-[Pathfinderキャラクターデータベース](http://dndjp.sakura.ne.jp/dddbpf/OUTPUT.php)用に制作した Chrome拡張機能です
+[Pathfinderキャラクターデータベース](https://dndjp.sakura.ne.jp/dddbpf/LIST.php)用に制作した Chrome拡張機能です
 以下のダイスロールを行うことが可能です
 * イニシアチブロール
 * セーヴィング・スロー
