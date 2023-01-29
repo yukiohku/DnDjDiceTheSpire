@@ -1,0 +1,19 @@
+{
+   "content_scripts": [ {
+      "css": [ "content.css" ],
+      "icons": {
+         "128": "icon_128.png"
+      },
+      "js": [ "main.js" ],
+      "matches": ["https://dndjp.sakura.ne.jp/dddbpf/OUTPUT.php*" ],
+      "run_at": "document_end"
+   } ],
+   "description": "dddbpf to TaleSpire Dice roller",
+   "manifest_version": 2,
+   "name": "dddbpf The Spire",
+   "options_ui": {
+      "open_in_tab": false,
+      "page": "options.html"
+   },
+   "version": "0.1.0.0"
+}
