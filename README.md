@@ -1,5 +1,5 @@
 # DnDjDiceTheSpire
-日本のD&amp;Dプレイで使用される各種サイトとTalespireを連携させるChrome拡張郡
+日本のD&amp;Dプレイで使用される各種サイトとTalespireを連携させるChrome拡張
 
 ### dddbpfthespire
 [Pathfinderキャラクターデータベース](https://dndjp.sakura.ne.jp/dddbpf/LIST.php)用に制作した Chrome拡張機能です
