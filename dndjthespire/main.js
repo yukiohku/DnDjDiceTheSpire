@@ -1,15 +1,14 @@
 CharacterLoop();
 
-function CharacterLoop(){
-    // hitDice()
-    // creatureMods();
-    // creatureAttacks();
-    // creatureDescriptions();
-    // replaceWrapper();
-    // attackWrapper();
-    // sidePanelDescriptions();
-    actionDescriptions();
-    setTimeout(CharacterLoop, 2000);
+function CharacterLoop() {
+    creatureDescriptions();
+
+    SetTSLinkToTableRowColumn("イニシアチブ", "init", 1, 0);
+    SetTSLinkToTableColumn("攻撃と呪文発動", "attack", 1);
+    SetTSLinkToTableColumn("技能値","skill",0);
+
+    //セーヴィング・スローの文字があるテーブルと値が格納されているテーブルが違うため、「能力修正」という文字列を利用してテーブルを引っ張ってくる
+    SetTSLinkToTableColumn("能力修正", "saving throw", 1);
 }
 
 function onlyUnique(value, index, self) {
@@ -27,7 +26,7 @@ function linkGenerator(fixed, brackets, d20, label = "") {
     const innerText = brackets ? `(${fixed})` : fixed;
     label = label.replace(/ /g, "%20");
     let dice = d20 ? `1D20${fixed}` : fixed;
-    if(dice.includes("d100")){
+    if (dice.includes("d100")) {
         dice = dice.replace(/d100/g, "d100+d10")
     }
     return `<a href="talespire://dice/${label}:${dice}" target="_self" class="talespireLink">${innerText}</a>`
@@ -42,13 +41,13 @@ function linkGenerator(fixed, brackets, d20, label = "") {
 function nodeLinkGenerator(sign, mod, label = "") {
     const a = document.createElement("a")
     label = label.replace(/ /g, "%20");
-    if(mod == "0"){
+    if (mod == "0") {
         a.href = `talespire://dice/${label}:1d20`;
     }
-    else{
+    else {
         a.href = `talespire://dice/${label}:1d20${sign}${mod}`;
     }
-    a.textContent = sign+mod;
+    a.textContent = sign + mod;
     a.classList.add("talespireLink");
     a.style.zIndex = "10";
     return a;
@@ -73,91 +72,21 @@ function nodeReplacer(parentNode, labelNode = null) {
         ability.appendChild(nodeLinkGenerator(sign, ability_number.textContent));
     }
     else {
-        if(labelNode.classList.contains("ddbc-saving-throws-summary__ability-name")){
+        if (labelNode.classList.contains("ddbc-saving-throws-summary__ability-name")) {
             ability.appendChild(nodeLinkGenerator(sign, ability_number.textContent, `${labelNode.textContent.toUpperCase()} Save`));
         }
-        else{
+        else {
             ability.appendChild(nodeLinkGenerator(sign, ability_number.textContent, labelNode.textContent));
         }
     }
 }
 
-// function creatureDescriptions(){
-//     const regex = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/gmi;  //Thanks PanoramicPanda for the Regex :) // https://regex101.com/r/roZY8b/3
-//     const descriptionChecker = /(?<!:)(?<![#0-9])(?<!dicenotation=")(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/m; //Thanks PanoramicPanda for the Regex :) https://regex101.com/r/0hUdgA/1
+function creatureDescriptions() {
+    const regex = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/gmi;  //Thanks PanoramicPanda for the Regex :) // https://regex101.com/r/roZY8b/3
+    const descriptionChecker = /(?<!:)(?<![#0-9])(?<!dicenotation=")(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/m; //Thanks PanoramicPanda for the Regex :) https://regex101.com/r/0hUdgA/1
 
-//     const elements = document.querySelectorAll('.mon-details__description-block-content:not(.TSExtensionAttacksModified)');
-//     for (const element of elements) {
-//         const currentText = element.innerHTML;
-//         const found = currentText.match(regex);
-//         if(found){
-//             for(const workingString of found) {
-//                 let fixed = workingString.replace(/[ )(]/g,''); //Thanks PanoramicPanda for the Regex :)
-//                 fixed = fixed.replace("−","-")
-//                 fixed = fixed.replace("+-","-");
-
-//                 element.innerHTML = element.innerHTML.replace(descriptionChecker, linkGenerator(fixed, true, false, ""))
-//             }
-//         }
-//       element.classList.add("TSExtensionAttacksModified");
-//     }
-// }
-
-// function sidePanelDescriptions() {
-//     const regex = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/gmi;  //Thanks PanoramicPanda for the Regex :) // https://regex101.com/r/roZY8b/3
-//     const descriptionChecker = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/m; //Thanks PanoramicPanda for the Regex :) https://regex101.com/r/0hUdgA/1
-//     const sidePanelTitle = document.querySelector('.ct-sidebar__heading');
-//     if (sidePanelTitle !== null) {
-//         let label = sidePanelTitle.textContent;
-//         const elements = document.querySelectorAll('.ct-action-detail__description:not(.TSExtensionAttacksModified), .ct-spell-detail__description:not(.TSExtensionAttacksModified), .ct-item-detail__description:not(.TSExtensionAttacksModified), .ddbc-property-list__property-content:not(.TSExtensionAttacksModified)');
-//         for (const element of elements) {
-//             let currentText = element.innerHTML;
-//             const found = currentText.match(regex);
-//             if (found) {
-//                 for (const workingString of found) {
-//                     let fixed = workingString.replace(/[ )(]/g, ''); //Thanks PanoramicPanda for the Regex :)
-//                     fixed = fixed.replace("−", "-")
-//                     fixed = fixed.replace("+-", "-");
-
-//                     element.innerHTML = element.innerHTML.replace(descriptionChecker, linkGenerator(fixed, true, false, label))
-//                 }
-//             }
-//             element.classList.add("TSExtensionAttacksModified");
-//         }
-//     }
-// }
-
-
-// function hitDice(){
-//     const regex = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/gmi;  //Thanks PanoramicPanda for the Regex :) // https://regex101.com/r/roZY8b/3
-//     const descriptionChecker = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+d\d+ *[−+-]? *[−+-]?\d*/m; //Thanks PanoramicPanda for the Regex :) https://regex101.com/r/0hUdgA/1
-//     const elements = document.querySelectorAll('.ct-reset-pane__hitdie-heading:not(.TSExtensionAttacksModified)');
-//     for (const element of elements) {
-//         const currentText = element.innerHTML;
-//         const found = currentText.match(regex);
-//         if(found){
-//             for(const workingString of found) {
-//                 let fixed = workingString.replace(/[ )(]/g,''); //Thanks PanoramicPanda for the Regex :)
-//                 fixed = fixed.replace("−","-")
-//                 fixed = fixed.replace("+-","-");
-
-//                 element.innerHTML = element.innerHTML.replace(descriptionChecker, linkGenerator(fixed, true, false, "Hit Die"))
-//             }
-//         }
-//       element.classList.add("TSExtensionAttacksModified");
-//     }
-// }
-
-
-function actionDescriptions(){
-    const regex = /(?<!:)(?<![#0-9])(?<!class="talespireLink">)\d+/gmi;  //Thanks PanoramicPanda for the Regex :) // https://regex101.com/r/roZY8b/3
-    const descriptionChecker = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()\d+/m; //Thanks PanoramicPanda for the Regex :) https://regex101.com/r/0hUdgA/1
-    const elements = document.querySelectorAll('.font:not(.TSExtensionAttacksModified)');
-
+    const elements = document.querySelectorAll('table table:not(.TSExtensionAttacksModified)');
     for (const element of elements) {
-        // const headingElement = element.querySelector('.C');
-        // const label = headingElement.textContent;
-        const label = "test";
         const currentText = element.innerHTML;
         const found = currentText.match(regex);
         if (found) {
@@ -166,108 +95,84 @@ function actionDescriptions(){
                 fixed = fixed.replace("−", "-")
                 fixed = fixed.replace("+-", "-");
 
-                element.innerHTML = element.innerHTML.replace(descriptionChecker, linkGenerator(fixed, true, false, label))
+                element.innerHTML = element.innerHTML.replace(descriptionChecker, linkGenerator(fixed, true, false, ""))
             }
         }
         element.classList.add("TSExtensionAttacksModified");
     }
 }
 
+function SetTSLinkToTableColumn(str, label, columnIndex) {
+    const table = getTable(str);
 
+    for (var i = 0, rowLen = table.rows.length; i < rowLen; i++) {
+        var target = table.rows[i].cells[columnIndex];
+        if (!target) {
+            continue;
+        }
 
+        const elements = target.querySelectorAll('div.A:not(.TSExtensionAttacksModified), div.C:not(.TSExtensionAttacksModified)');
+        ReplaceLink(elements, label);
+    }
+}
 
-/**
- * Handles replacing the ability, saving throws, items, proficiency & initiative
- * with talespire links
- */
-function replaceWrapper() {
-    const classesToScan = [{
-        mainName: ".ddbc-ability-summary",
-        labelName: ".ddbc-ability-summary__label"
-    }, {
-        mainName: ".ddbc-saving-throws-summary__ability",
-        labelName: ".ddbc-saving-throws-summary__ability-name"
-    }, {
-        mainName: ".ct-skills__item",
-        labelName: ".ct-skills__col--skill"
-    }, {
-        mainName: ".ct-proficiency-bonus-box",
-        labelName: ".ct-proficiency-bonus-box__heading"
-    }, {
-        mainName: ".ct-combat__summary-group--initiative",
-        labelName: ".ct-combat__summary-label"
-    }]
+function SetTSLinkToTableRow(str, label, rowIndex) {
+    const table = getTable(str);
+    var target = table.rows[rowIndex];
+    const elements = target.querySelectorAll('div.A:not(.TSExtensionAttacksModified)');
+    ReplaceLink(elements, label);
+}
 
-    for (const classes of classesToScan) {
-        const abilities = document.querySelectorAll(classes.mainName);
-        for (const ability of abilities) {
-            const talespireLinkCheck = ability.querySelector(".talespireLink");
+function SetTSLinkToTableRowColumn(str, label, rowIndex, columnIndex) {
+    const table = getTable(str);
+    var target = table.rows[rowIndex].cells[columnIndex];
+    const elements = target.querySelectorAll('div.A:not(.TSExtensionAttacksModified)');
+    ReplaceLink(elements, label);
+}
 
-            if (talespireLinkCheck !== null) {
-                continue;
+function ReplaceLink(elements, label) {
+    const regex = /(?<!:)(?<![#0-9])(?<!class="talespireLink">)[+-]?\d+/;
+    const descriptionChecker = /(?<!:)(?<![#0-9])(?<!class="talespireLink">\()[+-]?\d+/; //Thanks PanoramicPanda for the Regex :) https://regex101.com/r/0hUdgA/1
+
+    for (const element of elements) {
+        const currentText = element.innerHTML;
+
+        const found = currentText.match(regex);
+        if (found) {
+
+            for (const workingString of found) {
+                let fixed = workingString.replace(/[ )(]/g, ''); //Thanks PanoramicPanda for the Regex :)
+                fixed = "+" + fixed;
+                fixed = fixed.replace("−", "-")
+                fixed = fixed.replace("+-", "-");
+                element.innerHTML = element.innerHTML.replace(descriptionChecker, linkGenerator(fixed, false, true, label))
             }
+        }
+        element.classList.add("TSExtensionAttacksModified");
+    }
+}
 
-            const label = ability.querySelector(classes.labelName);
-            nodeReplacer(ability, label);
+function getHeaderTable(str) {
+    const elements = document.querySelectorAll('table');
+    for (const element of elements) {
+        const text = element.innerHTML;
+        const found = text.match(str);
+        if (found) {
+            return element;
         }
     }
 }
 
 /**
- * Handles replacing spells & melee attacks with talespire links
+ * @param {string} str
  */
-function attackWrapper() {
-    const classesToScan = [{
-        mainName: ".ct-spells-spell",
-        labelName: ".ct-spells-spell__label, .ddbc-spell-name"
-    }, {
-        mainName: ".ddbc-combat-attack",
-        labelName: ".ddbc-item-name, .ddbc-action-name, .ddbc-spell-name"
-    }]
-    for (const classes of classesToScan) {
-        const attacks = document.querySelectorAll(classes.mainName);
-        for (const attack of attacks) {
-            const talespireLinkCheck = attack.querySelector(".talespireLink");
-
-            if (talespireLinkCheck !== null) {
-                continue;
-            }
-
-            // Replaces the HIT/DC
-            const label = attack.querySelector(classes.labelName);
-            nodeReplacer(attack, label);
-            labelText = label.textContent.replace(/ /g, "%20");
-            // Replaces the DAMAGE or HEALING
-            const damage = attack.querySelectorAll(".ddbc-damage__value, .ddbc-spell-damage-effect__healing");
-            // Effects that aren't DAMAGE cause it to fail
-            // Skips Effects that have no dice like Aid
-            for (const roll of damage){
-                if (roll === null || !roll.textContent.includes("d")) {
-                    continue;
-                }
-                const parent = roll.parentElement;
-
-                const a = document.createElement("a")
-                a.href = "talespire://dice/" + labelText +":"+ roll.textContent;
-                a.textContent = roll.textContent;
-                a.classList.add("talespireLink");
-
-                // If it is a healing spell, remove the text of the roll
-                // If it is dmg then you can remove the element as normal
-                // This is due to healing having the Icon within the result unlike
-                // with dmg which has it on the same level
-                if (roll.classList.contains("ddbc-spell-damage-effect__healing")) {
-                    roll.removeChild(roll.firstChild);
-                    roll.prepend(a);
-                } else {
-                    parent.removeChild(roll);
-                    parent.prepend(a);
-                }
-            }
-
+function getTable(str) {
+    const elements = document.querySelectorAll('table table');
+    for (const element of elements) {
+        const text = element.innerHTML;
+        const found = text.match(str);
+        if (found) {
+            return element;
         }
     }
 }
-
-//exports.linkGenerator = linkGenerator;
-//exports.nodeLinkGenerator = nodeLinkGenerator;

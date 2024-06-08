@@ -5,12 +5,12 @@
          "128": "icon_128.png"
       },
       "js": [ "main.js" ],
-      "matches": [ "http://dndjp.sakura.ne.jp/dddbpf/OUTPUT.php*" ],
+      "matches": [ "https://dndjp.sakura.ne.jp/OUTPUT.php*","http://dndjp.sakura.ne.jp/OUTPUT.php*" ],
       "run_at": "document_end"
    } ],
-   "description": "dddbpf to TaleSpire Dice roller",
+   "description": "dndjp to TaleSpire Dice roller",
    "manifest_version": 2,
-   "name": "dddbpf The Spire",
+   "name": "dndjp The Spire",
    "options_ui": {
       "open_in_tab": false,
       "page": "options.html"
